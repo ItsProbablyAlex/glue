@@ -1,4 +1,4 @@
 public interface GivenStepDirectory {
-	Map<String, Select.Filter> getSteps();
+	Map<String, GivenStepr> getSteps();
 }
 

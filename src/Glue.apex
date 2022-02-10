@@ -4,7 +4,7 @@ public class Glue implements Glueable, Glued {
   	Map<Id, sObject> newMap;
 	Map<Id, sObject> oldMap;
   
-  	public Map<String, Select.Filter> givenSteps;
+  	public Map<String, GivenStep> givenSteps;
   	public Map<String, ThenStep> thenSteps;
 
     Step lastStep;
@@ -34,7 +34,7 @@ public class Glue implements Glueable, Glued {
             scope = this.newMap.keySet();
         }
         // get the filter
-        Select.Filter assertion = givenSteps.get(f);
+        GivenStep assertion = givenSteps.get(f);
         // update the scope
         List<Id> newScope = new List<sObject>();
         for (Id i in this.scope) {
