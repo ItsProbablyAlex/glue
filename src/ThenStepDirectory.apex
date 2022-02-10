@@ -1,3 +1,3 @@
 public interface ThenStepDirectory {
-	Map<String, Actionable> getSteps();
+	Map<String, ThenStep> getSteps();
 }

@@ -5,11 +5,13 @@ public class Glue implements Glueable, Glued {
 	Map<Id, sObject> oldMap;
   
   	public Map<String, Select.Filter> givenSteps;
-  	public Map<String, Actionable> thenSteps;
+  	public Map<String, ThenStep> thenSteps;
 
     Step lastStep;
-  	List<sObject> scope;
-    
+  	List<Id> scope;
+
+    List<ParameterType> paramTypes;
+
   	public Glue(
   		List<sObject> newRecords,
     	Map<Id, sObject> oldMap,
@@ -21,35 +23,47 @@ public class Glue implements Glueable, Glued {
     	this.oldMap = oldMap;
 		this.givenSteps = givenSteps.getSteps();
     	this.thenSteps = thenSteps.getSteps();
-    	this.scope = newMap.values();
+    	this.scope = newMap.keySet();
         this.lastStep = Step.INIT;
   	}
+
   	public Glued given(String f) {
         System.debug('Given: ' + f);
         // if the last stage wasn't a given refresh the scope
         if (this.lastStep != Step.GIVEN) {
-            scope = this.newMap.values();
+            scope = this.newMap.keySet();
         }
         // get the filter
-        Select.Filter scopeFilter = givenSteps.get(f);
+        Select.Filter assertion = givenSteps.get(f);
         // update the scope
-        this.scope = scopeFilter.filter(scope, oldMap);
-        System.debug(this.scope);
+        List<Id> newScope = new List<sObject>();
+        for (Id i in this.scope) {
+            sObject o = oldMap.get(i); 
+            sObject n = newMap.get(i);
+            if (assertion.evaluate(o, n)) {
+                newScope.add(i)
+            }
+        }
+        this.scope = newScope;
         // update the last step
         this.lastStep = Step.GIVEN;
         // return the glue object
         return this;
     }
+
 	public Glued then(String a) {
         System.debug('Then: ' + a);
-		System.debug('For Accounts: ' + this.scope);
         // get the action to perform
-        Actionable action = thenSteps.get(a);
+        ThenStep action = thenSteps.get(a);
+        // TODO: action not registered
         // execute over the current scope
-        List<sObject> actioned = action.execute(scope);
-        // update oldMap with the changed values 
-        for (sObject obj : actioned) {
-            this.newMap.put(obj.Id, obj);
+        // TODO: execution with args
+        for (Id i : scope) {
+            sObject o = oldMap.get(i); 
+            sObject n = newMap.get(i);
+            sObject updated = action.execute(o, n);
+            this.newMap.put(i, n);
+
         }
         // update the last step
         this.lastStep = Step.THN;

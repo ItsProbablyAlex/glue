@@ -1,16 +1,14 @@
 public class ThenAccount implements ThenStepDirectory {
-    public Map<String, Actionable> getSteps() {
-        return new Map<String, Actionable> {
-            'updateName' => new ThenUpdateName()
+    public Map<String, ThenStep> getSteps() {
+        return new Map<String, ThenStep> {
+            'Set FirstName To AHHHHH' => new UpdateName()
         };
     }
     
-    class ThenUpdateName implements Actionable {
-        public List<sObject> execute(List<Account> scope) {
-            for (Account a : scope) {
-                a.FirstName = 'AHHHH';
-            }
-        	return scope;
+    class UpdateName implements ThenStep {
+        public List<sObject> execute(Account a) {
+            a.FirstName = 'AHHHHH';
+        	return a;
         }
     }
 }

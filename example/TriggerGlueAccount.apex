@@ -5,7 +5,7 @@ trigger TriggerGlueAccount on Account (before update) {
         new GivenAccount(),
         new ThenAccount()
     );
-    
-   	glue.given('emailChanged')
-        .then('updateName');
+
+    glue.given('PersonEmail has changed')
+        .then('Set FirstName To AHHHHH')
 }
