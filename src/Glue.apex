@@ -1,4 +1,4 @@
-public class Glue implements Glueable, Glued {
+public class Glue {
     public static final Pattern PARAM_PATTERN = Pattern.compile('(\\([a-zA-Z0-9]+\\))');
 
     public enum Step {INIT, GIVEN, THN}
