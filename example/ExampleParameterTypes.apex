@@ -1,3 +1,4 @@
+// Define a class of parameter types in order to attain reusable steps
 public class ExampleParameterTypes {
     public static List<ParameterType> GLOBAL_TYPES = new List<ParameterType> {
         new ParameterType('field', '[a-zA-Z0-9_]+'),
